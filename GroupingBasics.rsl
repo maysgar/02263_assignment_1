@@ -1,0 +1,53 @@
+scheme  GroupingBasics =
+class
+  type 
+    Person = Text,
+    Relation = (Person >< Person)-set,
+    Group = Person-set,
+    Grouping = Group-set
+    
+  value /* auxilliary functions */ 
+    isFriendsRelation : Relation -> Bool
+    isFriendsRelation(r) is (exists p : Person :- (p,p) ~isin r),
+
+    areFriends : Person >< Person >< Relation -> Bool
+    areFriends(p1, p2, r) is ((p1,p2) isin r \/ (p2,p1) isin r),
+
+
+    validGroup : Group >< Person-set -> Bool
+    validGroup(h,ps) is
+    let nh = h inter ps in
+    (h = nh)
+    end,
+
+    checkPairs: Person >< Group >< Relation -> Bool
+    checkPairs(person,group,relation) is
+    if group = {}
+      then true
+    else
+      let head = hd(group) in
+      ~areFriends(person, head, relation) /\ checkPairs(person, group\{head}, relation)
+    end
+    end,
+
+    isCorrectGrouping : Grouping >< Person-set >< Relation -> Bool
+    isCorrectGrouping(gs,ps,r) is
+    if gs = {} then true
+    else
+      let h = hd(gs), t = gs\{h} in
+      validGroup(h,ps) /\ groupNotFriends(h,r) /\  isCorrectGrouping(t,ps,r)
+    end
+    end,
+
+
+    groupNotFriends : Group >< Relation -> Bool
+    groupNotFriends(h,r) is 
+    if h = {}
+      then true
+    else
+      let head = hd(h) in
+      checkPairs(head, h\{head}, r) /\ groupNotFriends(h\{head},r)
+      end
+    end
+
+ end
