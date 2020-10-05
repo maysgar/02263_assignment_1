@@ -1,0 +1,13 @@
+GroupingEx
+
+scheme testGroupingEx =
+extend GroupingEx with 
+class
+  value 
+    ... 
+
+  test_case 
+    ...
+
+ end
+ 

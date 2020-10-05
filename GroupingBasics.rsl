@@ -27,7 +27,7 @@ class
     else
       let head = hd(group) in
       ~areFriends(person, head, relation) /\ checkPairs(person, group\{head}, relation)
-    end
+      end
     end,
 
     isCorrectGrouping : Grouping >< Person-set >< Relation -> Bool
@@ -36,7 +36,7 @@ class
     else
       let h = hd(gs), t = gs\{h} in
       validGroup(h,ps) /\ groupNotFriends(h,r) /\  isCorrectGrouping(t,ps,r)
-    end
+      end
     end,
 
 
