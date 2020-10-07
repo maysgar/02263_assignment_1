@@ -7,12 +7,19 @@ class
     Grouping = Group-set
     
   value /* auxilliary functions */ 
-    isFriendsRelation : Relation -> Bool
-    isFriendsRelation(r) is (exists p : Person :- (p,p) ~isin r),
+
+    a : Person = "a",
+    b:Person = "b",
+    c:Person = "c",
+    d:Person = "d",
+    f:Person = "f",
+    r:Relation ={("a","b"),("d","a")},
+    gs_example :Group-set={{"a","c"},{"b","d","f"},{"a","d"}},
+    ps_example : Person-set = {"a","d"},
+    s_first:Person-set={},
 
     areFriends : Person >< Person >< Relation -> Bool
     areFriends(p1, p2, r) is ((p1,p2) isin r \/ (p2,p1) isin r),
-
 
     validGroup : Group >< Person-set -> Bool
     validGroup(h,ps) is
@@ -39,7 +46,6 @@ class
       end
     end,
 
-
     groupNotFriends : Group >< Relation -> Bool
     groupNotFriends(h,r) is 
     if h = {}
@@ -48,6 +54,30 @@ class
       let head = hd(h) in
       checkPairs(head, h\{head}, r) /\ groupNotFriends(h\{head},r)
       end
+    end,
+
+    isFriendsRelation : Relation -> Bool
+    isFriendsRelation(r) is
+    if (all (m, n) : Person >< Person :- (m,n) isin r => m ~= n)
+      then true
+    else
+      false
     end
+    
+
+    test_case
+   [t1]
+    1+6,
+    areFriends(a,b,r),
+   [t2]
+    areFriends(a,b,r)
+    /*
+   [t3]
+    notFriendsInPersonSet(ps_example,r),*/
+  /*
+   [t3]
+    isCorrectGrouping(gs_example,ps_example,r)
+    */
+    
 
  end
