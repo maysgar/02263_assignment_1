@@ -3,11 +3,49 @@ GroupingEx
 scheme testGroupingEx =
 extend GroupingEx with 
 class
-  value 
-    ... 
+  value
 
+    a : Person = "a",
+    b : Person = "b",
+    c : Person = "c",
+    d : Person = "d",
+    f : Person = "f",
+    r : Relation = {("a","b"),("d","a")},
+    g_example : Group = {"a","d"},
+    g_example_2 : Group = {"c","f"},
+    gs_example : Group-set = {{"a","c"},{"b","d","f"}},
+    ps_example : Person-set = {"a", "b", "c","d", "f"},
+
+    group_set_alone : Group-set = {{"a","c"},{"b","d"}},
+    left_alone : Person-set = {"f"},
+    left_final_grouping : Person-set = {"e", "f"},
+    s_first : Person-set = {}
+  
   test_case 
-    ...
+   [t1]
+    areFriends(a,b,r),
+   [t2]
+    areFriends(b,d,r),
+   [t3]
+    isFriendsRelation(r),
+   [t4]
+    checkPairs(c,g_example,r),
+   [t5]
+    groupNotFriends(g_example_2,r),
+   [t6]
+    isCorrectGrouping(gs_example, ps_example, r),
+   [t7]
+    nonFriend(a, ps_example, r),
+   [t8]
+    formPairs(ps_example, r),
+   [t9]
+    addSingles(group_set_alone, left_alone),
+   [t10]
+    finalGroup(group_set_alone, left_final_grouping, r),
+   [t11]
+    newPS(group_set_alone, ps_example),
+   [t12]
+    divide(ps_example, r)
 
  end
  
