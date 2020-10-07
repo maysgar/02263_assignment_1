@@ -5,21 +5,13 @@ extend GroupingBasics with
 class
   value
 
-   newPs : Grouping >< Person-set -> Person-set
-   newPs(gr, ps) is
-   if gr = {}
-    then ps
-   else
-    let h = hd(gr) in 
-    (ps\h) inter newPs(gr\{h}, ps)
-    end
-   end,
-
    divide : Person-set >< Relation -~-> Grouping
    divide(ps, r) is 
-   let p = formPairs(ps, r) in 
-   finalGroup(p, newPs(p, ps))
+   let p = formPairs(ps, r),
+       pf = finalGroup(p, newPS(p, ps), r) in
+   addSingles(pf, newPS(pf, ps))
    end
 
    pre isFriendsRelation(r)
+
 end
