@@ -12,6 +12,102 @@ class
    addSingles(pf, newPS(pf, ps))
    end
 
-   pre isFriendsRelation(r)
+   pre isFriendsRelation(r),
+
+    nonFriend : Person >< Person-set >< Relation -> Person
+    nonFriend(p,ps,r) is 
+    if (ps = {})
+      then "NoPair"
+    else
+      let h = hd(ps) in
+        if(~areFriends(p,h,r))
+          then h
+        else
+        nonFriend(p,ps\{h},r)
+        end
+      end
+    end,
+
+
+    formPairs: Person-set >< Relation -> Grouping
+    formPairs(ps,r) is
+    if (card ps <= 1)
+      then {}
+    else
+      let h = hd(ps), p = nonFriend(h,ps\{h},r) in
+        if p = "NoPair"
+          then formPairs(ps\{h},r)
+        else
+          {{h,p}} union formPairs(ps\{h,p},r)
+        end
+      end  
+    end,
+
+
+    addSingles: Grouping >< Person-set -> Grouping
+    addSingles(gr,ps) is
+    if ps = {}
+     then gr
+    else
+      let p = hd(ps) in
+        addSingles(gr union {{p}}, ps\{p})
+      end
+    end,
+
+
+    newPS : Grouping >< Person-set -> Person-set
+    newPS(gr, ps) is
+    if(gr = {})
+      then ps
+    else
+      let h = hd(gr) in
+        (ps\h) inter newPS(gr\{h},ps)
+      end
+    end,
+
+
+    validGroup: Person >< Group >< Relation -> Bool
+    validGroup(p,g,r) is
+    if g = {}
+      then true
+    else
+      let h = hd(g) in
+        if areFriends(p,h,r)
+          then false
+        else
+          validGroup(p,g\{h},r)
+        end
+      end
+    end,
+
+
+    placeInGroup : Person >< Grouping >< Relation -> Group
+    placeInGroup(p,gr,r) is
+    if gr = {}
+      then {}
+    else
+      let g = hd(gr) in
+        if validGroup(p,g,r)
+          then {p} union g
+        else
+          placeInGroup(p,gr\{g},r)
+        end
+      end
+    end,
+
+
+    finalGroup : Grouping >< Person-set >< Relation -> Grouping
+    finalGroup(gr,ps,r) is
+    if ps = {}
+      then gr
+    else
+      let p = hd(ps), gm = placeInGroup(p,gr,r) in
+        if gm = {}
+          then finalGroup(gr,ps\{p},r)
+        else
+          finalGroup({gm} union(gr\{gm\{p}}),ps\{p},r)
+        end
+      end
+    end
 
 end

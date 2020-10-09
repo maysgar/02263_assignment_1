@@ -11,10 +11,21 @@ class
     d : Person = "d",
     f : Person = "f",
     r : Relation = {("a","b"),("d","a")},
+    r_small : Relation = {("a","b")},
+    r_large : Relation = {("a","b"),("d","a"),("k","e"),("f","l"),("g","i")},
+    r_really_large : Relation = {("a","b"),("d","a"),("k","e"),("f","l"),("g","i"),("d","f"),
+    ("k","a"),("b","j"),("c","f")},
+    r_given_example : Relation = { ("Anna", "Henrik"), ("Anna", "Frederik"), ("Henrik", "Frederik"),
+    ("Anna", "Mette"),("Hans", "Mette"), ("Hans", "Joachim"), ("Mette", "Joachim")},
+
+    ps_test : Person-set = {"a","b","k","c"},
     g_example : Group = {"a","d"},
     g_example_2 : Group = {"c","f"},
     gs_example : Group-set = {{"a","c"},{"b","d","f"}},
     ps_example : Person-set = {"a", "b", "c","d", "f"},
+    ps_example_large : Person-set = {"a","b","c","d","e","f","g","h","i","j","k","l"},
+    ps_small : Person-set = {"a","b"},
+    ps_given_example : Person-set = {"Anna","Henrik","Frederik","Mette","Hans","Joachim","Peter"},
 
     group_set_alone : Group-set = {{"a","c"},{"b","d"}},
     left_alone : Person-set = {"f"},
@@ -45,7 +56,23 @@ class
    [t11]
     newPS(group_set_alone, ps_example),
    [t12]
-    divide(ps_example, r)
+    divide(ps_example, r),
+   [t13]
+    divide(ps_example_large, r_large),
+   [t14]
+    divide(ps_small, r_small),
+   [t15]
+    validGroup("c",g_example,r_small),
+   [t16]
+    placeInGroup("k", gs_example, r),
+   [t17]
+    divide(ps_test,r_small),
+   [t18]
+    divide({"a"},r),
+   [t19]
+    divide(ps_given_example,r_given_example),
+   [t20]
+    isCorrectGrouping(divide(ps_given_example,r_given_example),ps_given_example,r_given_example)
 
  end
  
